@@ -140,9 +140,11 @@ const Index = () => {
               </h1>
             </div>
             <div className="flex items-center space-x-4">
-              <Button variant="outline" className="hidden sm:flex">
-                Post a Task
-              </Button>
+              <Link to="/post-task">
+                <Button variant="outline" className="hidden sm:flex">
+                  Post a Task
+                </Button>
+              </Link>
               <Link to="/signup">
                 <Button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
                   Sign Up
