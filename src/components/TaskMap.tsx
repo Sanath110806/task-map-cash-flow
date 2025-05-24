@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { MapPin } from 'lucide-react';
@@ -20,6 +19,13 @@ interface Task {
 interface TaskMapProps {
   tasks: Task[];
   apiKey: string;
+}
+
+// Extend Window interface to include google
+declare global {
+  interface Window {
+    google: typeof google;
+  }
 }
 
 const TaskMap = ({ tasks, apiKey }: TaskMapProps) => {
@@ -56,7 +62,7 @@ const TaskMap = ({ tasks, apiKey }: TaskMapProps) => {
     if (!mapContainer.current || !window.google) return;
 
     // Initialize map centered on NYC
-    map.current = new google.maps.Map(mapContainer.current, {
+    map.current = new window.google.maps.Map(mapContainer.current, {
       center: { lat: 40.7128, lng: -74.0060 },
       zoom: 12,
       styles: [
@@ -84,7 +90,7 @@ const TaskMap = ({ tasks, apiKey }: TaskMapProps) => {
 
     // Add markers for each task
     tasks.forEach(task => {
-      const marker = new google.maps.Marker({
+      const marker = new window.google.maps.Marker({
         position: task.coordinates,
         map: map.current,
         title: task.title,
@@ -96,12 +102,12 @@ const TaskMap = ({ tasks, apiKey }: TaskMapProps) => {
               <text x="15" y="20" font-family="Arial" font-size="12" font-weight="bold" text-anchor="middle" fill="#3B82F6">$${task.price}</text>
             </svg>
           `)}`,
-          scaledSize: new google.maps.Size(30, 40),
-          anchor: new google.maps.Point(15, 40)
+          scaledSize: new window.google.maps.Size(30, 40),
+          anchor: new window.google.maps.Point(15, 40)
         }
       });
 
-      const infoWindow = new google.maps.InfoWindow({
+      const infoWindow = new window.google.maps.InfoWindow({
         content: `
           <div class="p-3 max-w-xs">
             <h3 class="font-semibold text-gray-900 mb-1">${task.title}</h3>
@@ -123,9 +129,12 @@ const TaskMap = ({ tasks, apiKey }: TaskMapProps) => {
 
     // Adjust map bounds to fit all markers
     if (markers.current.length > 0) {
-      const bounds = new google.maps.LatLngBounds();
+      const bounds = new window.google.maps.LatLngBounds();
       markers.current.forEach(marker => {
-        bounds.extend(marker.getPosition()!);
+        const position = marker.getPosition();
+        if (position) {
+          bounds.extend(position);
+        }
       });
       map.current.fitBounds(bounds);
     }
