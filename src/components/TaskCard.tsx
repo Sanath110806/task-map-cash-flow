@@ -1,5 +1,6 @@
 
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,8 @@ interface TaskCardProps {
 }
 
 const TaskCard = ({ task }: TaskCardProps) => {
+  const navigate = useNavigate();
+
   const getCategoryColor = (category: string) => {
     const colors = {
       cleaning: 'bg-blue-100 text-blue-800',
@@ -47,6 +50,14 @@ const TaskCard = ({ task }: TaskCardProps) => {
     return colors[urgency as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
+  const handleViewDetails = () => {
+    navigate(`/task/${task.id}`);
+  };
+
+  const handleApplyNow = () => {
+    navigate(`/task/${task.id}/apply`);
+  };
+
   return (
     <Card className="hover:shadow-lg transition-all duration-300 hover:border-blue-200 group">
       <CardContent className="p-6">
@@ -58,6 +69,15 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <p className="text-gray-600 text-sm mb-3 line-clamp-2">
               {task.description}
             </p>
+            {/* Make poster name more prominent */}
+            <div className="flex items-center mb-3 bg-gray-50 rounded-lg p-2">
+              <User className="w-5 h-5 mr-2 text-blue-600" />
+              <span className="font-medium text-gray-900">Posted by {task.poster}</span>
+              <div className="flex items-center ml-2">
+                <Star className="w-4 h-4 mr-1 text-yellow-500" />
+                <span className="text-sm font-medium text-gray-700">{task.rating.toFixed(1)}</span>
+              </div>
+            </div>
           </div>
           <div className="text-right ml-4">
             <div className="text-2xl font-bold text-green-600 mb-1">
@@ -85,14 +105,6 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <Clock className="w-4 h-4 mr-1" />
             {task.timeEstimate}
           </div>
-          <div className="flex items-center">
-            <User className="w-4 h-4 mr-1" />
-            {task.poster}
-          </div>
-          <div className="flex items-center">
-            <Star className="w-4 h-4 mr-1 text-yellow-500" />
-            {task.rating.toFixed(1)}
-          </div>
         </div>
 
         <div className="flex gap-2">
@@ -100,12 +112,14 @@ const TaskCard = ({ task }: TaskCardProps) => {
             variant="outline" 
             size="sm" 
             className="flex-1 hover:bg-blue-50 hover:border-blue-300"
+            onClick={handleViewDetails}
           >
             View Details
           </Button>
           <Button 
             size="sm" 
             className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+            onClick={handleApplyNow}
           >
             Apply Now
           </Button>

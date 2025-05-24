@@ -7,6 +7,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
 import Signup from "./pages/Signup";
 import PostTask from "./pages/PostTask";
+import TaskDetails from "./pages/TaskDetails";
+import ApplyTask from "./pages/ApplyTask";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -21,6 +23,8 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/post-task" element={<PostTask />} />
+          <Route path="/task/:id" element={<TaskDetails />} />
+          <Route path="/task/:id/apply" element={<ApplyTask />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
