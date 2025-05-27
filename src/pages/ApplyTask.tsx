@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -8,6 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { MapPin, ArrowLeft, CheckCircle, Clock, DollarSign, User } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import TaskMap from '../components/TaskMap';
 
 const ApplyTask = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,6 +21,8 @@ const ApplyTask = () => {
     availability: '',
     experience: ''
   });
+
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
 
   // Sample task data - in a real app, you'd fetch this based on the ID
   const tasks = [
@@ -72,6 +74,11 @@ const ApplyTask = () => {
     }));
   };
 
+  const handleLocationDetected = (location: { lat: number; lng: number }) => {
+    setUserLocation(location);
+    console.log('User location detected:', location);
+  };
+
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
     
@@ -84,11 +91,17 @@ const ApplyTask = () => {
       return;
     }
 
-    console.log('Application data:', applicationData);
+    const submissionData = {
+      ...applicationData,
+      userLocation,
+      taskId: task.id
+    };
+
+    console.log('Application data with location:', submissionData);
     
     toast({
       title: "Application Submitted!",
-      description: "Your application has been sent to the task poster.",
+      description: "Your application and location have been sent to the task poster.",
     });
 
     navigate('/');
@@ -121,18 +134,18 @@ const ApplyTask = () => {
       </header>
 
       {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-4">Apply for Task</h2>
           <p className="text-lg text-gray-600">
-            Submit your application to work on this task.
+            Submit your application and share your location with the task poster.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Application Form */}
-          <div className="lg:col-span-2">
-            <Card className="shadow-lg">
+          <div>
+            <Card className="shadow-lg mb-6">
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
@@ -246,11 +259,36 @@ const ApplyTask = () => {
                 </form>
               </CardContent>
             </Card>
+
+            {/* Location Status */}
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center">
+                  <MapPin className="w-5 h-5 mr-2 text-blue-600" />
+                  Location Sharing
+                </CardTitle>
+                <CardDescription>
+                  Your location helps the task poster see how close you are.
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {userLocation ? (
+                  <div className="text-sm text-green-600">
+                    ✓ Location detected and will be shared with your application
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-500">
+                    Click "Update Location" on the map to share your current location
+                  </div>
+                )}
+              </CardContent>
+            </Card>
           </div>
 
-          {/* Task Summary */}
-          <div>
-            <Card className="sticky top-8">
+          {/* Right Column */}
+          <div className="space-y-6">
+            {/* Task Summary */}
+            <Card>
               <CardHeader>
                 <CardTitle className="text-lg">Task Summary</CardTitle>
               </CardHeader>
@@ -288,6 +326,13 @@ const ApplyTask = () => {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Map with User Location */}
+            <TaskMap 
+              tasks={[task]} 
+              showUserLocation={true}
+              onLocationDetected={handleLocationDetected}
+            />
           </div>
         </div>
       </div>

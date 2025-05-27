@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,6 @@ import { useToast } from "@/hooks/use-toast";
 const Index = () => {
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchTerm, setSearchTerm] = useState('');
-  const [mapApiKey, setMapApiKey] = useState('');
   const { toast } = useToast();
 
   // Sample task data
@@ -116,15 +114,6 @@ const Index = () => {
     return matchesCategory && matchesSearch;
   });
 
-  const handleApiKeySubmit = () => {
-    if (mapApiKey.trim()) {
-      toast({
-        title: "API Key Set!",
-        description: "Google Maps integration is now active.",
-      });
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
@@ -183,33 +172,6 @@ const Index = () => {
               <div className="text-gray-600">User Rating</div>
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Google Maps API Key Input */}
-      <section className="px-4 sm:px-6 lg:px-8 mb-8">
-        <div className="max-w-7xl mx-auto">
-          <Card className="bg-yellow-50 border-yellow-200">
-            <CardHeader>
-              <CardTitle className="text-yellow-800">Google Maps Integration</CardTitle>
-              <CardDescription className="text-yellow-700">
-                To enable location features, please enter your Google Maps API key below. You can get one from the Google Cloud Console.
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="flex gap-2">
-                <Input
-                  placeholder="Enter your Google Maps API key..."
-                  value={mapApiKey}
-                  onChange={(e) => setMapApiKey(e.target.value)}
-                  className="flex-1"
-                />
-                <Button onClick={handleApiKeySubmit} disabled={!mapApiKey.trim()}>
-                  Set API Key
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
@@ -273,7 +235,7 @@ const Index = () => {
             <div className="lg:col-span-1">
               <div className="sticky top-24">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Task Locations</h3>
-                <TaskMap tasks={filteredTasks} apiKey={mapApiKey} />
+                <TaskMap tasks={filteredTasks} apiKey={""} />
               </div>
             </div>
           </div>
