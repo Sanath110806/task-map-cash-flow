@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -15,85 +16,180 @@ const Index = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { toast } = useToast();
 
-  // Sample task data
+  // Animated counter states
+  const [activeUsers, setActiveUsers] = useState(8500);
+  const [averageEarning, setAverageEarning] = useState(380);
+  const [userRating, setUserRating] = useState(4.6);
+
+  // Animate counters
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setActiveUsers(prev => {
+        const target = 10000;
+        if (prev < target) {
+          return Math.min(prev + Math.floor(Math.random() * 50) + 10, target);
+        }
+        return target;
+      });
+      
+      setAverageEarning(prev => {
+        const target = 450;
+        if (prev < target) {
+          return Math.min(prev + Math.floor(Math.random() * 5) + 1, target);
+        }
+        return target;
+      });
+      
+      setUserRating(prev => {
+        const target = 4.9;
+        if (prev < target) {
+          return Math.min(prev + 0.01, target);
+        }
+        return target;
+      });
+    }, 100);
+
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 3000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  // Sample task data with Indian context
   const tasks = [
     {
       id: 1,
-      title: "Clean my apartment",
-      description: "Need someone to deep clean a 2-bedroom apartment",
-      price: 80,
+      title: "Deep clean 2BHK apartment",
+      description: "Need professional cleaning service for my 2BHK apartment in Koramangala. Includes bathroom deep cleaning, kitchen chimney cleaning, floor mopping, dusting all furniture, and balcony cleaning. Must bring own cleaning supplies and equipment. Apartment is on 4th floor with lift access. Prefer someone with experience in residential cleaning.",
+      price: 800,
       category: "cleaning",
-      location: "Downtown",
-      poster: "Sarah M.",
+      location: "Koramangala, Bangalore",
+      poster: "Priya S.",
       rating: 4.8,
-      timeEstimate: "3-4 hours",
+      timeEstimate: "4-5 hours",
       urgency: "Today",
-      coordinates: { lat: 40.7128, lng: -74.0060 }
+      coordinates: { lat: 12.9352, lng: 77.6245 }
     },
     {
       id: 2,
-      title: "Grocery shopping and delivery",
-      description: "Pick up groceries from the list and deliver to my home",
-      price: 25,
+      title: "Grocery shopping from Big Bazaar",
+      description: "Need someone to pick up monthly groceries from Big Bazaar and deliver to my home in Andheri. Will provide detailed shopping list with brand preferences. Payment for groceries will be done via UPI transfer before shopping. Must have own vehicle for delivery. Total grocery value around ₹3000-4000.",
+      price: 250,
       category: "delivery",
-      location: "Midtown",
-      poster: "John D.",
+      location: "Andheri West, Mumbai",
+      poster: "Rajesh K.",
       rating: 4.9,
-      timeEstimate: "1-2 hours",
+      timeEstimate: "2-3 hours",
       urgency: "Tomorrow",
-      coordinates: { lat: 40.7589, lng: -73.9851 }
+      coordinates: { lat: 19.1358, lng: 72.8262 }
     },
     {
       id: 3,
-      title: "Walk my dog",
-      description: "30-minute walk for my friendly Golden Retriever",
-      price: 20,
+      title: "Dog walking service",
+      description: "Daily evening walk for my friendly Golden Retriever 'Bruno' around Lodhi Gardens area. Bruno is well-trained and loves walks. Need someone reliable for 45-60 minutes daily between 6-8 PM. Must be comfortable with large dogs and have experience with pets. Regular weekly payment basis preferred.",
+      price: 200,
       category: "pet-care",
-      location: "Central Park Area",
-      poster: "Emily R.",
+      location: "Lodhi Colony, Delhi",
+      poster: "Anjali M.",
       rating: 5.0,
-      timeEstimate: "30 minutes",
+      timeEstimate: "1 hour",
       urgency: "This Week",
-      coordinates: { lat: 40.7829, lng: -73.9654 }
+      coordinates: { lat: 28.5918, lng: 77.2273 }
     },
     {
       id: 4,
-      title: "Assemble IKEA furniture",
-      description: "Help assemble a bookshelf and desk from IKEA",
-      price: 45,
+      title: "IKEA furniture assembly",
+      description: "Help needed to assemble IKEA bedroom furniture set including wardrobe, study table, and bedside tables. All tools will be provided. Must have experience with IKEA assembly and understand instruction manuals. Work location is in Whitefield. Refreshments and lunch will be provided during work.",
+      price: 600,
       category: "handyman",
-      location: "Brooklyn",
-      poster: "Mike T.",
+      location: "Whitefield, Bangalore",
+      poster: "Vikram T.",
       rating: 4.7,
-      timeEstimate: "2-3 hours",
+      timeEstimate: "3-4 hours",
       urgency: "This Weekend",
-      coordinates: { lat: 40.6782, lng: -73.9442 }
+      coordinates: { lat: 12.9698, lng: 77.7500 }
     },
     {
       id: 5,
-      title: "Data entry work",
-      description: "Enter customer information into spreadsheet",
-      price: 30,
+      title: "Data entry for small business",
+      description: "Enter customer data from physical invoices into Excel spreadsheet for my small textile business. Around 500 entries with customer details, purchase amounts, and dates. Must have good typing speed and accuracy. Work can be done remotely or from shop location in Karol Bagh. Payment on completion.",
+      price: 400,
       category: "admin",
-      location: "Remote",
-      poster: "Lisa K.",
+      location: "Karol Bagh, Delhi",
+      poster: "Suresh L.",
       rating: 4.6,
-      timeEstimate: "2 hours",
+      timeEstimate: "6-8 hours",
       urgency: "Next Week",
-      coordinates: { lat: 40.7505, lng: -73.9934 }
+      coordinates: { lat: 28.6519, lng: 77.1909 }
     },
     {
       id: 6,
-      title: "Move boxes to storage",
-      description: "Help move 10 boxes from apartment to storage unit",
-      price: 60,
+      title: "House shifting assistance",
+      description: "Need 2-3 people to help pack and move household items from old flat to new flat within Pune city. Distance is about 15km. Will provide packing materials and transportation. Need careful handling of electronics and glassware. Work involves packing, loading, unloading and basic arrangement.",
+      price: 750,
       category: "moving",
-      location: "Queens",
-      poster: "David L.",
+      location: "Pune, Maharashtra",
+      poster: "Neha D.",
+      rating: 4.8,
+      timeEstimate: "5-6 hours",
+      urgency: "Today",
+      coordinates: { lat: 18.5204, lng: 73.8567 }
+    },
+    {
+      id: 7,
+      title: "Home cooking for dinner party",
+      description: "Need experienced cook to prepare North Indian dinner for 8 people at my home in Gurgaon. Menu includes dal makhani, paneer butter masala, rotis, rice, and dessert. All ingredients will be provided. Must have experience in party cooking and own transportation. Cooking to be done on-site.",
+      price: 900,
+      category: "cooking",
+      location: "Sector 49, Gurgaon",
+      poster: "Meera A.",
+      rating: 4.9,
+      timeEstimate: "4-5 hours",
+      urgency: "This Weekend",
+      coordinates: { lat: 28.4089, lng: 77.0424 }
+    },
+    {
+      id: 8,
+      title: "AC servicing and cleaning",
+      description: "Regular servicing and deep cleaning of 3 split ACs in my 3BHK apartment. Includes filter cleaning, coil cleaning, gas checking, and general maintenance. Must bring necessary tools and cleaning equipment. Previous AC servicing experience mandatory. All ACs are 1.5 ton capacity.",
+      price: 950,
+      category: "maintenance",
+      location: "Bandra East, Mumbai",
+      poster: "Karthik R.",
+      rating: 4.7,
+      timeEstimate: "3-4 hours",
+      urgency: "This Week",
+      coordinates: { lat: 19.0596, lng: 72.8411 }
+    },
+    {
+      id: 9,
+      title: "Plant care and gardening",
+      description: "Weekly plant care for my terrace garden with 20+ plants including watering, pruning, fertilizing, and pest control. Must have knowledge of plant care and gardening. Garden includes both flowering plants and vegetables. Regular weekly arrangement preferred for consistent care.",
+      price: 300,
+      category: "gardening",
+      location: "Jayanagar, Bangalore",
+      poster: "Lakshmi P.",
       rating: 4.8,
       timeEstimate: "2-3 hours",
-      urgency: "Today",
-      coordinates: { lat: 40.7282, lng: -73.7949 }
+      urgency: "This Week",
+      coordinates: { lat: 12.9279, lng: 77.5937 }
+    },
+    {
+      id: 10,
+      title: "Tuition for Class 10 Math",
+      description: "Need experienced tutor for Class 10 CBSE Mathematics for my son. Prefer someone with B.Ed or engineering background. Sessions will be 3 times per week for 1.5 hours each. Must have good communication skills and patience with students. Home tuition preferred in Noida Sector 62.",
+      price: 500,
+      category: "tutoring",
+      location: "Sector 62, Noida",
+      poster: "Amit S.",
+      rating: 4.9,
+      timeEstimate: "1.5 hours",
+      urgency: "This Week",
+      coordinates: { lat: 28.6273, lng: 77.3714 }
     }
   ];
 
@@ -104,7 +200,11 @@ const Index = () => {
     { id: 'pet-care', name: 'Pet Care', count: tasks.filter(t => t.category === 'pet-care').length },
     { id: 'handyman', name: 'Handyman', count: tasks.filter(t => t.category === 'handyman').length },
     { id: 'admin', name: 'Admin', count: tasks.filter(t => t.category === 'admin').length },
-    { id: 'moving', name: 'Moving', count: tasks.filter(t => t.category === 'moving').length }
+    { id: 'moving', name: 'Moving', count: tasks.filter(t => t.category === 'moving').length },
+    { id: 'cooking', name: 'Cooking', count: tasks.filter(t => t.category === 'cooking').length },
+    { id: 'maintenance', name: 'Maintenance', count: tasks.filter(t => t.category === 'maintenance').length },
+    { id: 'gardening', name: 'Gardening', count: tasks.filter(t => t.category === 'gardening').length },
+    { id: 'tutoring', name: 'Tutoring', count: tasks.filter(t => t.category === 'tutoring').length }
   ];
 
   const filteredTasks = tasks.filter(task => {
@@ -157,18 +257,24 @@ const Index = () => {
             Connect with people in your area who need help with simple tasks. Earn money doing what you're already good at.
           </p>
           
-          {/* Stats */}
+          {/* Stats with Animation */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <div className="text-center">
-              <div className="text-3xl font-bold text-blue-600 mb-2">10,000+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">
+                {activeUsers.toLocaleString('en-IN')}+
+              </div>
               <div className="text-gray-600">Active Users</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-purple-600 mb-2">$50</div>
+              <div className="text-3xl font-bold text-purple-600 mb-2">
+                ₹{averageEarning}
+              </div>
               <div className="text-gray-600">Average Earning</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-green-600 mb-2">4.9★</div>
+              <div className="text-3xl font-bold text-green-600 mb-2">
+                {userRating.toFixed(1)}★
+              </div>
               <div className="text-gray-600">User Rating</div>
             </div>
           </div>

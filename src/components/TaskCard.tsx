@@ -35,6 +35,10 @@ const TaskCard = ({ task }: TaskCardProps) => {
       handyman: 'bg-orange-100 text-orange-800',
       admin: 'bg-purple-100 text-purple-800',
       moving: 'bg-red-100 text-red-800',
+      cooking: 'bg-yellow-100 text-yellow-800',
+      maintenance: 'bg-indigo-100 text-indigo-800',
+      gardening: 'bg-green-100 text-green-800',
+      tutoring: 'bg-blue-100 text-blue-800',
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
@@ -81,7 +85,7 @@ const TaskCard = ({ task }: TaskCardProps) => {
           </div>
           <div className="text-right ml-4">
             <div className="text-2xl font-bold text-green-600 mb-1">
-              ${task.price}
+              ₹{task.price}
             </div>
             <div className="text-xs text-gray-500">per task</div>
           </div>
