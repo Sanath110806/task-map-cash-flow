@@ -235,7 +235,7 @@ const Index = () => {
             <div className="lg:col-span-1">
               <div className="sticky top-24">
                 <h3 className="text-xl font-semibold text-gray-900 mb-4">Task Locations</h3>
-                <TaskMap tasks={filteredTasks} apiKey={""} />
+                <TaskMap tasks={filteredTasks} />
               </div>
             </div>
           </div>

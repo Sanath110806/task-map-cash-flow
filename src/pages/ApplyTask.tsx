@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -36,7 +37,8 @@ const ApplyTask = () => {
       poster: "Sarah M.",
       rating: 4.8,
       timeEstimate: "3-4 hours",
-      urgency: "Today"
+      urgency: "Today",
+      coordinates: { lat: 40.7128, lng: -74.0060 }
     },
     {
       id: 2,
@@ -48,7 +50,8 @@ const ApplyTask = () => {
       poster: "John D.",
       rating: 4.9,
       timeEstimate: "1-2 hours",
-      urgency: "Tomorrow"
+      urgency: "Tomorrow",
+      coordinates: { lat: 40.7589, lng: -73.9851 }
     }
   ];
 
