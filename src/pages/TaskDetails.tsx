@@ -14,32 +14,32 @@ const TaskDetails = () => {
   const tasks = [
     {
       id: 1,
-      title: "Clean my apartment",
-      description: "Need someone to deep clean a 2-bedroom apartment. This includes vacuuming all carpets, mopping floors, cleaning bathrooms thoroughly, kitchen deep clean including inside the oven and refrigerator. Must bring own cleaning supplies. The apartment is on the 3rd floor with no elevator access.",
-      price: 80,
+      title: "Deep clean 2BHK apartment",
+      description: "Need professional cleaning service for my 2BHK apartment in Koramangala. Includes bathroom deep cleaning, kitchen chimney cleaning, floor mopping, dusting all furniture, and balcony cleaning. Must bring own cleaning supplies and equipment. Apartment is on 4th floor with lift access. Prefer someone with experience in residential cleaning.",
+      price: 800,
       category: "cleaning",
-      location: "Downtown",
-      poster: "Sarah M.",
+      location: "Koramangala, Bangalore",
+      poster: "Priya S.",
       rating: 4.8,
-      timeEstimate: "3-4 hours",
+      timeEstimate: "4-5 hours",
       urgency: "Today",
-      coordinates: { lat: 40.7128, lng: -74.0060 },
+      coordinates: { lat: 12.9352, lng: 77.6245 },
       postedDate: "2 hours ago",
       requirements: ["Must bring own cleaning supplies", "Non-smoker preferred", "References required"],
       images: ["/placeholder.svg", "/placeholder.svg"]
     },
     {
       id: 2,
-      title: "Grocery shopping and delivery",
-      description: "Pick up groceries from the list and deliver to my home",
-      price: 25,
+      title: "Grocery shopping from Big Bazaar",
+      description: "Need someone to pick up monthly groceries from Big Bazaar and deliver to my home in Andheri. Will provide detailed shopping list with brand preferences. Payment for groceries will be done via UPI transfer before shopping. Must have own vehicle for delivery. Total grocery value around ₹3000-4000.",
+      price: 250,
       category: "delivery",
-      location: "Midtown",
-      poster: "John D.",
+      location: "Andheri West, Mumbai",
+      poster: "Rajesh K.",
       rating: 4.9,
-      timeEstimate: "1-2 hours",
+      timeEstimate: "2-3 hours",
       urgency: "Tomorrow",
-      coordinates: { lat: 40.7589, lng: -73.9851 },
+      coordinates: { lat: 19.1358, lng: 72.8262 },
       postedDate: "1 day ago",
       requirements: ["Own vehicle required", "Must be 18+"],
       images: []
@@ -125,7 +125,7 @@ const TaskDetails = () => {
                     </CardDescription>
                   </div>
                   <div className="text-right">
-                    <div className="text-3xl font-bold text-green-600">${task.price}</div>
+                    <div className="text-3xl font-bold text-green-600">₹{task.price}</div>
                     <div className="text-sm text-gray-500">per task</div>
                   </div>
                 </div>
