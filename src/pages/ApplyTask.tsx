@@ -1,12 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { MapPin, Star, Clock, DollarSign, User, ArrowLeft, Upload, MapIcon } from 'lucide-react';
+import { MapPin, Star, Clock, User, ArrowLeft, CheckCircle, Navigation } from 'lucide-react';
 import TaskMap from '../components/TaskMap';
 import { useToast } from "@/hooks/use-toast";
 
@@ -14,17 +11,7 @@ const ApplyTask = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { toast } = useToast();
-
-  const [application, setApplication] = useState({
-    coverLetter: '',
-    experience: '',
-    availability: '',
-    expectedCompletionTime: '',
-    portfolio: null as File | null
-  });
-
-  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
-  const [locationError, setLocationError] = useState<string>('');
+  const [isApplied, setIsApplied] = useState(false);
 
   // Sample task data with Indian context and all coordinates
   const tasks = [
@@ -162,34 +149,16 @@ const ApplyTask = () => {
 
   const task = tasks.find(t => t.id === parseInt(id || '0'));
 
-  // Get user's current location
-  const getCurrentLocation = () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          setUserLocation({
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          });
-          setLocationError('');
-          toast({
-            title: "Location shared successfully",
-            description: "Your location has been included in your application.",
-          });
-        },
-        (error) => {
-          setLocationError('Failed to get your location. Please enable location access.');
-          toast({
-            title: "Location access denied",
-            description: "Please enable location access to share your location with the task poster.",
-            variant: "destructive",
-          });
-        }
-      );
-    } else {
-      setLocationError('Geolocation is not supported by this browser.');
+  // Auto-apply when component loads
+  useEffect(() => {
+    if (task && !isApplied) {
+      setIsApplied(true);
+      toast({
+        title: "Applied for the task!",
+        description: "Your application has been submitted successfully. Use the map below to navigate to the task location.",
+      });
     }
-  };
+  }, [task, isApplied, toast]);
 
   if (!task) {
     return (
@@ -231,34 +200,6 @@ const ApplyTask = () => {
     return colors[urgency as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Include user location in application if available
-    const applicationData = {
-      ...application,
-      taskId: task.id,
-      userLocation: userLocation,
-      timestamp: new Date().toISOString()
-    };
-
-    console.log('Application submitted:', applicationData);
-    
-    toast({
-      title: "Application submitted!",
-      description: "Your application has been sent to the task poster. They will contact you soon.",
-    });
-    
-    navigate(`/task/${task.id}`);
-  };
-
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setApplication(prev => ({ ...prev, portfolio: file }));
-    }
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
       {/* Header */}
@@ -288,117 +229,54 @@ const ApplyTask = () => {
       {/* Main Content */}
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Application Form */}
+          {/* Success Message */}
           <div className="lg:col-span-2">
             <Card>
+              <CardContent className="p-8 text-center">
+                <CheckCircle className="w-16 h-16 text-green-500 mx-auto mb-4" />
+                <h2 className="text-2xl font-bold text-gray-900 mb-2">Applied for the task!</h2>
+                <p className="text-gray-600 mb-6">
+                  Your application has been submitted successfully. The task poster will contact you soon.
+                </p>
+                <div className="flex justify-center space-x-4">
+                  <Button onClick={() => navigate('/')} variant="outline">
+                    Browse More Tasks
+                  </Button>
+                  <Button onClick={() => navigate(`/task/${task.id}`)} variant="outline">
+                    View Task Details
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Navigation Map */}
+            <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Apply for this Task</CardTitle>
+                <CardTitle className="flex items-center">
+                  <Navigation className="w-5 h-5 mr-2" />
+                  Navigate to Task Location
+                </CardTitle>
                 <CardDescription>
-                  Tell the poster why you're the right person for this job
+                  Use the map below to get directions to the task location
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <Label htmlFor="coverLetter">Cover Letter *</Label>
-                    <Textarea
-                      id="coverLetter"
-                      placeholder="Explain why you're perfect for this task..."
-                      value={application.coverLetter}
-                      onChange={(e) => setApplication(prev => ({ ...prev, coverLetter: e.target.value }))}
-                      required
-                      rows={4}
-                    />
-                  </div>
-
-                  <div>
-                    <Label htmlFor="experience">Relevant Experience</Label>
-                    <Textarea
-                      id="experience"
-                      placeholder="Describe your relevant experience..."
-                      value={application.experience}
-                      onChange={(e) => setApplication(prev => ({ ...prev, experience: e.target.value }))}
-                      rows={3}
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <Label htmlFor="availability">When can you start?</Label>
-                      <Input
-                        id="availability"
-                        placeholder="e.g., Tomorrow morning"
-                        value={application.availability}
-                        onChange={(e) => setApplication(prev => ({ ...prev, availability: e.target.value }))}
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="completionTime">Expected completion time</Label>
-                      <Input
-                        id="completionTime"
-                        placeholder="e.g., 3-4 hours"
-                        value={application.expectedCompletionTime}
-                        onChange={(e) => setApplication(prev => ({ ...prev, expectedCompletionTime: e.target.value }))}
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <Label htmlFor="portfolio">Portfolio/Previous Work (Optional)</Label>
-                    <div className="mt-1">
-                      <input
-                        id="portfolio"
-                        type="file"
-                        accept="image/*,.pdf"
-                        onChange={handleFileUpload}
-                        className="hidden"
-                      />
-                      <label
-                        htmlFor="portfolio"
-                        className="flex items-center justify-center w-full px-4 py-6 border-2 border-dashed border-gray-300 rounded-lg cursor-pointer hover:border-blue-400 transition-colors"
-                      >
-                        <div className="text-center">
-                          <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
-                          <p className="text-sm text-gray-600">
-                            {application.portfolio ? application.portfolio.name : 'Click to upload files'}
-                          </p>
-                          <p className="text-xs text-gray-500">PNG, JPG, PDF up to 10MB</p>
-                        </div>
-                      </label>
-                    </div>
-                  </div>
-
-                  {/* Location Sharing */}
-                  <div className="bg-blue-50 p-4 rounded-lg">
-                    <h4 className="font-medium text-gray-900 mb-2">Share Your Location</h4>
-                    <p className="text-sm text-gray-600 mb-3">
-                      Help the task poster know you're nearby by sharing your current location.
-                    </p>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={getCurrentLocation}
-                      className="w-full"
-                    >
-                      <MapIcon className="w-4 h-4 mr-2" />
-                      {userLocation ? 'Location Shared ✓' : 'Share My Location'}
-                    </Button>
-                    {locationError && (
-                      <p className="text-sm text-red-600 mt-2">{locationError}</p>
-                    )}
-                  </div>
-
-                  <Button type="submit" className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700">
-                    Submit Application
-                  </Button>
-                </form>
+                <TaskMap tasks={[task]} showUserLocation={true} />
+                <div className="mt-4 p-4 bg-blue-50 rounded-lg">
+                  <h4 className="font-medium text-gray-900 mb-2">Getting there:</h4>
+                  <p className="text-sm text-gray-600 mb-2">
+                    📍 <strong>Task Location:</strong> {task.location}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    💡 Tip: Click "Update Location" to get real-time directions from your current position
+                  </p>
+                </div>
               </CardContent>
             </Card>
           </div>
 
-          {/* Task Summary & Map */}
+          {/* Task Summary */}
           <div className="space-y-6">
-            {/* Task Summary */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center justify-between">
@@ -429,23 +307,24 @@ const ApplyTask = () => {
                   <Star className="w-4 h-4 ml-2 text-yellow-500" />
                   <span className="ml-1">{task.rating}</span>
                 </div>
+                <div className="mt-4 p-3 bg-green-50 rounded-lg">
+                  <p className="text-sm text-green-800 font-medium">
+                    ✓ Application Status: Submitted
+                  </p>
+                  <p className="text-xs text-green-600 mt-1">
+                    The poster will contact you within 24 hours
+                  </p>
+                </div>
               </CardContent>
             </Card>
 
-            {/* Location Map */}
+            {/* Task Description */}
             <Card>
               <CardHeader>
-                <CardTitle>Task Location</CardTitle>
+                <CardTitle>Task Description</CardTitle>
               </CardHeader>
               <CardContent>
-                <TaskMap tasks={[task]} />
-                {userLocation && (
-                  <div className="mt-4 p-3 bg-green-50 rounded-lg">
-                    <p className="text-sm text-green-800">
-                      ✓ Your location has been shared and will be included in your application.
-                    </p>
-                  </div>
-                )}
+                <p className="text-sm text-gray-700">{task.description}</p>
               </CardContent>
             </Card>
           </div>
