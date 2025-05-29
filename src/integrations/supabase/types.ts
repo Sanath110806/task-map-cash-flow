@@ -9,7 +9,174 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      profiles: {
+        Row: {
+          address: string | null
+          created_at: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          latitude: number | null
+          longitude: number | null
+          phone: string | null
+          profile_image_url: string | null
+          rating: number | null
+          total_ratings: number | null
+          updated_at: string | null
+          user_role: Database["public"]["Enums"]["user_role"]
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string | null
+          email: string
+          first_name: string
+          id: string
+          last_name: string
+          latitude?: number | null
+          longitude?: number | null
+          phone?: string | null
+          profile_image_url?: string | null
+          rating?: number | null
+          total_ratings?: number | null
+          updated_at?: string | null
+          user_role?: Database["public"]["Enums"]["user_role"]
+        }
+        Update: {
+          address?: string | null
+          created_at?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          last_name?: string
+          latitude?: number | null
+          longitude?: number | null
+          phone?: string | null
+          profile_image_url?: string | null
+          rating?: number | null
+          total_ratings?: number | null
+          updated_at?: string | null
+          user_role?: Database["public"]["Enums"]["user_role"]
+        }
+        Relationships: []
+      }
+      task_applications: {
+        Row: {
+          applied_at: string | null
+          id: string
+          message: string | null
+          responded_at: string | null
+          status: Database["public"]["Enums"]["application_status"] | null
+          task_id: string | null
+          worker_id: string | null
+        }
+        Insert: {
+          applied_at?: string | null
+          id?: string
+          message?: string | null
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["application_status"] | null
+          task_id?: string | null
+          worker_id?: string | null
+        }
+        Update: {
+          applied_at?: string | null
+          id?: string
+          message?: string | null
+          responded_at?: string | null
+          status?: Database["public"]["Enums"]["application_status"] | null
+          task_id?: string | null
+          worker_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_applications_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_applications_worker_id_fkey"
+            columns: ["worker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assigned_worker_id: string | null
+          category: string
+          created_at: string | null
+          description: string
+          estimated_time: string | null
+          id: string
+          images: string[] | null
+          latitude: number
+          location: string
+          longitude: number
+          poster_id: string | null
+          price: number
+          status: Database["public"]["Enums"]["task_status"] | null
+          title: string
+          updated_at: string | null
+          urgency: string | null
+        }
+        Insert: {
+          assigned_worker_id?: string | null
+          category: string
+          created_at?: string | null
+          description: string
+          estimated_time?: string | null
+          id?: string
+          images?: string[] | null
+          latitude: number
+          location: string
+          longitude: number
+          poster_id?: string | null
+          price: number
+          status?: Database["public"]["Enums"]["task_status"] | null
+          title: string
+          updated_at?: string | null
+          urgency?: string | null
+        }
+        Update: {
+          assigned_worker_id?: string | null
+          category?: string
+          created_at?: string | null
+          description?: string
+          estimated_time?: string | null
+          id?: string
+          images?: string[] | null
+          latitude?: number
+          location?: string
+          longitude?: number
+          poster_id?: string | null
+          price?: number
+          status?: Database["public"]["Enums"]["task_status"] | null
+          title?: string
+          updated_at?: string | null
+          urgency?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_assigned_worker_id_fkey"
+            columns: ["assigned_worker_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_poster_id_fkey"
+            columns: ["poster_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +185,9 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      application_status: "pending" | "accepted" | "rejected"
+      task_status: "open" | "in_progress" | "completed" | "cancelled"
+      user_role: "task_provider" | "gig_worker" | "both"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +302,10 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      application_status: ["pending", "accepted", "rejected"],
+      task_status: ["open", "in_progress", "completed", "cancelled"],
+      user_role: ["task_provider", "gig_worker", "both"],
+    },
   },
 } as const

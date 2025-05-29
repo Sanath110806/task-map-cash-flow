@@ -6,13 +6,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Badge } from "@/components/ui/badge";
 import { MapPin, ArrowLeft, Upload, Clock, DollarSign, CheckCircle } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
+import { supabase } from "@/integrations/supabase/client";
 
 const PostTask = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
+  const [loading, setLoading] = useState(false);
   
   const [formData, setFormData] = useState({
     title: '',
@@ -21,6 +24,8 @@ const PostTask = () => {
     estimatedTime: '',
     fee: '',
     location: '',
+    latitude: '',
+    longitude: '',
     urgency: '',
     images: [] as File[]
   });
@@ -43,7 +48,7 @@ const PostTask = () => {
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files).slice(0, 3); // Limit to 3 images
+      const newImages = Array.from(files).slice(0, 3);
       setFormData(prev => ({
         ...prev,
         images: [...prev.images, ...newImages].slice(0, 3)
@@ -58,10 +63,25 @@ const PostTask = () => {
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const getCoordinatesFromAddress = async (address: string) => {
+    // Simple geocoding fallback - in production you'd use a proper geocoding service
+    const defaultCoords = { lat: 28.6139, lng: 77.2090 }; // Delhi coordinates as fallback
+    return defaultCoords;
+  };
+
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     
-    // Basic validation
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to post a task.",
+        variant: "destructive"
+      });
+      navigate('/login');
+      return;
+    }
+
     if (!formData.title || !formData.description || !formData.category || !formData.fee) {
       toast({
         title: "Missing Information",
@@ -71,16 +91,49 @@ const PostTask = () => {
       return;
     }
 
-    // Here you would typically send the data to your backend
-    console.log('Task data:', formData);
-    
-    toast({
-      title: "Task Posted Successfully!",
-      description: "Your task has been posted and is now visible to workers.",
-    });
+    setLoading(true);
 
-    // Redirect back to main page
-    navigate('/');
+    try {
+      // Get coordinates for the location
+      const coords = await getCoordinatesFromAddress(formData.location);
+      
+      // Insert task into database
+      const { data, error } = await supabase
+        .from('tasks')
+        .insert({
+          title: formData.title,
+          description: formData.description,
+          category: formData.category,
+          price: parseFloat(formData.fee),
+          estimated_time: formData.estimatedTime,
+          urgency: formData.urgency,
+          location: formData.location,
+          latitude: coords.lat,
+          longitude: coords.lng,
+          poster_id: user.id,
+          images: [] // For now, we'll handle image upload later
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Task Posted Successfully!",
+        description: "Your task has been posted and is now visible to workers.",
+      });
+
+      navigate('/');
+    } catch (error) {
+      console.error('Error posting task:', error);
+      toast({
+        title: "Error",
+        description: "Failed to post task. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -181,7 +234,7 @@ const PostTask = () => {
 
                 <div>
                   <Label htmlFor="location" className="text-sm font-medium text-gray-700">
-                    Location
+                    Location *
                   </Label>
                   <Input
                     id="location"
@@ -189,6 +242,7 @@ const PostTask = () => {
                     value={formData.location}
                     onChange={(e) => handleInputChange('location', e.target.value)}
                     className="mt-1"
+                    required
                   />
                 </div>
               </div>
@@ -276,7 +330,6 @@ const PostTask = () => {
                   </label>
                 </div>
 
-                {/* Image Preview */}
                 {formData.images.length > 0 && (
                   <div className="grid grid-cols-3 gap-4 mt-4">
                     {formData.images.map((image, index) => (
@@ -312,8 +365,9 @@ const PostTask = () => {
                 <Button
                   type="submit"
                   className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700"
+                  disabled={loading}
                 >
-                  Post Task
+                  {loading ? 'Posting Task...' : 'Post Task'}
                 </Button>
               </div>
             </form>
