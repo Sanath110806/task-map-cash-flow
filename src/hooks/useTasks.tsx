@@ -13,12 +13,12 @@ export interface Task {
   location: string;
   latitude: number;
   longitude: number;
-  status: 'open' | 'in_progress' | 'completed' | 'cancelled';
-  poster_id: string;
+  status: string;
+  poster_id?: string;
   assigned_worker_id?: string;
   images?: string[];
   created_at: string;
-  updated_at: string;
+  updated_at?: string;
   profiles?: {
     first_name: string;
     last_name: string;
@@ -28,21 +28,18 @@ export interface Task {
 
 export const useTasks = () => {
   const [tasks, setTasks] = useState<Task[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
   const fetchTasks = async () => {
+    setLoading(true);
+    setError(null);
     try {
-      setLoading(true);
       const { data, error } = await supabase
         .from('tasks')
         .select(`
           *,
-          profiles:poster_id (
+          poster_profile:profiles!poster_id (
             first_name,
             last_name,
             rating
@@ -53,13 +50,13 @@ export const useTasks = () => {
 
       if (error) throw error;
       
-      // Type the data properly and handle potential null profiles
+      // Transform the data to match our Task interface
       const typedTasks: Task[] = (data || []).map(task => ({
         ...task,
-        profiles: task.profiles ? {
-          first_name: task.profiles.first_name,
-          last_name: task.profiles.last_name,
-          rating: task.profiles.rating || 0
+        profiles: task.poster_profile ? {
+          first_name: task.poster_profile.first_name,
+          last_name: task.poster_profile.last_name,
+          rating: task.poster_profile.rating || 0
         } : null
       }));
       
@@ -71,5 +68,38 @@ export const useTasks = () => {
     }
   };
 
-  return { tasks, loading, error, refetch: fetchTasks };
+  const createTask = async (taskData: Omit<Task, 'id' | 'created_at' | 'updated_at' | 'profiles'>) => {
+    setLoading(true);
+    setError(null);
+    try {
+      const { data, error } = await supabase
+        .from('tasks')
+        .insert(taskData)
+        .select()
+        .single();
+
+      if (error) throw error;
+      
+      // Refresh tasks after creating
+      await fetchTasks();
+      return data;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'An error occurred');
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchTasks();
+  }, []);
+
+  return {
+    tasks,
+    loading,
+    error,
+    fetchTasks,
+    createTask
+  };
 };
