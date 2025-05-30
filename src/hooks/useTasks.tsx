@@ -23,7 +23,7 @@ export interface Task {
     first_name: string;
     last_name: string;
     rating: number;
-  };
+  } | null;
 }
 
 export const useTasks = () => {
@@ -52,7 +52,18 @@ export const useTasks = () => {
         .order('created_at', { ascending: false });
 
       if (error) throw error;
-      setTasks(data || []);
+      
+      // Type the data properly and handle potential null profiles
+      const typedTasks: Task[] = (data || []).map(task => ({
+        ...task,
+        profiles: task.profiles ? {
+          first_name: task.profiles.first_name,
+          last_name: task.profiles.last_name,
+          rating: task.profiles.rating || 0
+        } : null
+      }));
+      
+      setTasks(typedTasks);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
     } finally {
