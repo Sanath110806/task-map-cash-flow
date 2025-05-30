@@ -1,6 +1,12 @@
 
 import { useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
+import { Database } from '@/integrations/supabase/types';
+
+// Use the actual database types
+type TaskStatus = Database['public']['Enums']['task_status'];
+type TaskRow = Database['public']['Tables']['tasks']['Row'];
+type TaskInsert = Database['public']['Tables']['tasks']['Insert'];
 
 export interface Task {
   id: string;
@@ -13,7 +19,7 @@ export interface Task {
   location: string;
   latitude: number;
   longitude: number;
-  status: string;
+  status: TaskStatus;
   poster_id?: string;
   assigned_worker_id?: string;
   images?: string[];
@@ -68,7 +74,7 @@ export const useTasks = () => {
     }
   };
 
-  const createTask = async (taskData: Omit<Task, 'id' | 'created_at' | 'updated_at' | 'profiles'>) => {
+  const createTask = async (taskData: Omit<TaskInsert, 'id' | 'created_at' | 'updated_at'>) => {
     setLoading(true);
     setError(null);
     try {
