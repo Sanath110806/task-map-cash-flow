@@ -5,20 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MapPin, Star, Clock, DollarSign, User } from 'lucide-react';
-
-interface Task {
-  id: number;
-  title: string;
-  description: string;
-  price: number;
-  category: string;
-  location: string;
-  poster: string;
-  rating: number;
-  timeEstimate: string;
-  urgency: string;
-  coordinates: { lat: number; lng: number };
-}
+import { Task } from '@/hooks/useTasks';
 
 interface TaskCardProps {
   task: Task;
@@ -62,6 +49,12 @@ const TaskCard = ({ task }: TaskCardProps) => {
     navigate(`/task/${task.id}/apply`);
   };
 
+  // Get poster name and rating from profiles
+  const posterName = task.profiles 
+    ? `${task.profiles.first_name} ${task.profiles.last_name}`
+    : 'Unknown User';
+  const posterRating = task.profiles?.rating || 0;
+
   return (
     <Card className="hover:shadow-lg transition-all duration-300 hover:border-blue-200 group">
       <CardContent className="p-6">
@@ -76,11 +69,13 @@ const TaskCard = ({ task }: TaskCardProps) => {
             {/* Make poster name more prominent */}
             <div className="flex items-center mb-3 bg-gray-50 rounded-lg p-2">
               <User className="w-5 h-5 mr-2 text-blue-600" />
-              <span className="font-medium text-gray-900">Posted by {task.poster}</span>
-              <div className="flex items-center ml-2">
-                <Star className="w-4 h-4 mr-1 text-yellow-500" />
-                <span className="text-sm font-medium text-gray-700">{task.rating.toFixed(1)}</span>
-              </div>
+              <span className="font-medium text-gray-900">Posted by {posterName}</span>
+              {posterRating > 0 && (
+                <div className="flex items-center ml-2">
+                  <Star className="w-4 h-4 mr-1 text-yellow-500" />
+                  <span className="text-sm font-medium text-gray-700">{posterRating.toFixed(1)}</span>
+                </div>
+              )}
             </div>
           </div>
           <div className="text-right ml-4">
@@ -95,9 +90,11 @@ const TaskCard = ({ task }: TaskCardProps) => {
           <Badge className={getCategoryColor(task.category)}>
             {task.category.replace('-', ' ')}
           </Badge>
-          <Badge className={getUrgencyColor(task.urgency)}>
-            {task.urgency}
-          </Badge>
+          {task.urgency && (
+            <Badge className={getUrgencyColor(task.urgency)}>
+              {task.urgency}
+            </Badge>
+          )}
         </div>
 
         <div className="grid grid-cols-2 gap-4 text-sm text-gray-600 mb-4">
@@ -105,10 +102,12 @@ const TaskCard = ({ task }: TaskCardProps) => {
             <MapPin className="w-4 h-4 mr-1" />
             {task.location}
           </div>
-          <div className="flex items-center">
-            <Clock className="w-4 h-4 mr-1" />
-            {task.timeEstimate}
-          </div>
+          {task.estimated_time && (
+            <div className="flex items-center">
+              <Clock className="w-4 h-4 mr-1" />
+              {task.estimated_time}
+            </div>
+          )}
         </div>
 
         <div className="flex gap-2">
