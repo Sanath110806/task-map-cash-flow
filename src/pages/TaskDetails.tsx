@@ -10,7 +10,7 @@ const TaskDetails = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
-  // Sample task data - in a real app, you'd fetch this based on the ID
+  // Complete task data for all 6 tasks
   const tasks = [
     {
       id: 1,
@@ -43,6 +43,70 @@ const TaskDetails = () => {
       postedDate: "1 day ago",
       requirements: ["Own vehicle required", "Must be 18+"],
       images: []
+    },
+    {
+      id: 3,
+      title: "Walk my Golden Retriever",
+      description: "Looking for someone to walk my friendly Golden Retriever, Max, for 1 hour in the evening. He's well-trained and loves meeting new people. Must be comfortable with large dogs. Route includes nearby park and some street walking. Max knows basic commands and is leash trained.",
+      price: 300,
+      category: "pet-care",
+      location: "Bandra East, Mumbai",
+      poster: "Meera D.",
+      rating: 4.7,
+      timeEstimate: "1 hour",
+      urgency: "Today",
+      coordinates: { lat: 19.0596, lng: 72.8295 },
+      postedDate: "3 hours ago",
+      requirements: ["Must be comfortable with large dogs", "Experience with pets preferred", "Available in evenings"],
+      images: ["/placeholder.svg"]
+    },
+    {
+      id: 4,
+      title: "Fix leaking kitchen tap",
+      description: "My kitchen tap has been dripping for a week now. Need a skilled handyman to fix or replace the tap. Basic tools will be provided, but please bring expertise in plumbing. The tap is a standard mixer type. Water supply can be turned off during work hours.",
+      price: 450,
+      category: "handyman",
+      location: "Whitefield, Bangalore",
+      poster: "Amit P.",
+      rating: 4.5,
+      timeEstimate: "1-2 hours",
+      urgency: "This Weekend",
+      coordinates: { lat: 12.9698, lng: 77.7500 },
+      postedDate: "5 hours ago",
+      requirements: ["Plumbing experience required", "Must bring own tools", "Weekend availability"],
+      images: []
+    },
+    {
+      id: 5,
+      title: "Cook dinner for family gathering",
+      description: "Need an experienced cook to prepare traditional North Indian dinner for 8 people this Sunday. Menu includes dal makhani, paneer butter masala, rotis, rice, and dessert. All ingredients will be provided. Kitchen is fully equipped with gas stove and all necessary utensils.",
+      price: 1200,
+      category: "cooking",
+      location: "Punjabi Bagh, Delhi",
+      poster: "Sunita M.",
+      rating: 4.9,
+      timeEstimate: "3-4 hours",
+      urgency: "This Weekend",
+      coordinates: { lat: 28.6742, lng: 77.1311 },
+      postedDate: "6 hours ago",
+      requirements: ["Experience in North Indian cuisine", "Must be hygienic", "Sunday availability"],
+      images: ["/placeholder.svg"]
+    },
+    {
+      id: 6,
+      title: "Help with house shifting",
+      description: "Moving to a new 1BHK apartment within the same locality. Need 2-3 people to help pack, load, and unload furniture and boxes. Truck is already arranged. Items include bed, sofa, dining table, and about 20 boxes. New apartment is on ground floor.",
+      price: 600,
+      category: "moving",
+      location: "Sector 62, Noida",
+      poster: "Rohit S.",
+      rating: 4.6,
+      timeEstimate: "4-5 hours",
+      urgency: "Tomorrow",
+      coordinates: { lat: 28.6139, lng: 77.3678 },
+      postedDate: "8 hours ago",
+      requirements: ["Physical fitness required", "Team of 2-3 people", "Tomorrow availability"],
+      images: []
     }
   ];
 
@@ -69,6 +133,7 @@ const TaskDetails = () => {
       handyman: 'bg-orange-100 text-orange-800',
       admin: 'bg-purple-100 text-purple-800',
       moving: 'bg-red-100 text-red-800',
+      cooking: 'bg-yellow-100 text-yellow-800',
     };
     return colors[category as keyof typeof colors] || 'bg-gray-100 text-gray-800';
   };

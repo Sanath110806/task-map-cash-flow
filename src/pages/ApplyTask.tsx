@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
@@ -13,7 +14,7 @@ const ApplyTask = () => {
   const { toast } = useToast();
   const [isApplied, setIsApplied] = useState(false);
 
-  // Sample task data with Indian context and all coordinates
+  // Complete task data for all 6 tasks
   const tasks = [
     {
       id: 1,
@@ -43,107 +44,55 @@ const ApplyTask = () => {
     },
     {
       id: 3,
-      title: "Dog walking service",
-      description: "Daily evening walk for my friendly Golden Retriever 'Bruno' around Lodhi Gardens area. Bruno is well-trained and loves walks. Need someone reliable for 45-60 minutes daily between 6-8 PM. Must be comfortable with large dogs and have experience with pets. Regular weekly payment basis preferred.",
-      price: 200,
+      title: "Walk my Golden Retriever",
+      description: "Looking for someone to walk my friendly Golden Retriever, Max, for 1 hour in the evening. He's well-trained and loves meeting new people. Must be comfortable with large dogs. Route includes nearby park and some street walking. Max knows basic commands and is leash trained.",
+      price: 300,
       category: "pet-care",
-      location: "Lodhi Colony, Delhi",
-      poster: "Anjali M.",
-      rating: 5.0,
+      location: "Bandra East, Mumbai",
+      poster: "Meera D.",
+      rating: 4.7,
       timeEstimate: "1 hour",
-      urgency: "This Week",
-      coordinates: { lat: 28.5918, lng: 77.2273 }
+      urgency: "Today",
+      coordinates: { lat: 19.0596, lng: 72.8295 }
     },
     {
       id: 4,
-      title: "IKEA furniture assembly",
-      description: "Help needed to assemble IKEA bedroom furniture set including wardrobe, study table, and bedside tables. All tools will be provided. Must have experience with IKEA assembly and understand instruction manuals. Work location is in Whitefield. Refreshments and lunch will be provided during work.",
-      price: 600,
+      title: "Fix leaking kitchen tap",
+      description: "My kitchen tap has been dripping for a week now. Need a skilled handyman to fix or replace the tap. Basic tools will be provided, but please bring expertise in plumbing. The tap is a standard mixer type. Water supply can be turned off during work hours.",
+      price: 450,
       category: "handyman",
       location: "Whitefield, Bangalore",
-      poster: "Vikram T.",
-      rating: 4.7,
-      timeEstimate: "3-4 hours",
+      poster: "Amit P.",
+      rating: 4.5,
+      timeEstimate: "1-2 hours",
       urgency: "This Weekend",
       coordinates: { lat: 12.9698, lng: 77.7500 }
     },
     {
       id: 5,
-      title: "Data entry for small business",
-      description: "Enter customer data from physical invoices into Excel spreadsheet for my small textile business. Around 500 entries with customer details, purchase amounts, and dates. Must have good typing speed and accuracy. Work can be done remotely or from shop location in Karol Bagh. Payment on completion.",
-      price: 400,
-      category: "admin",
-      location: "Karol Bagh, Delhi",
-      poster: "Suresh L.",
-      rating: 4.6,
-      timeEstimate: "6-8 hours",
-      urgency: "Next Week",
-      coordinates: { lat: 28.6519, lng: 77.1909 }
+      title: "Cook dinner for family gathering",
+      description: "Need an experienced cook to prepare traditional North Indian dinner for 8 people this Sunday. Menu includes dal makhani, paneer butter masala, rotis, rice, and dessert. All ingredients will be provided. Kitchen is fully equipped with gas stove and all necessary utensils.",
+      price: 1200,
+      category: "cooking",
+      location: "Punjabi Bagh, Delhi",
+      poster: "Sunita M.",
+      rating: 4.9,
+      timeEstimate: "3-4 hours",
+      urgency: "This Weekend",
+      coordinates: { lat: 28.6742, lng: 77.1311 }
     },
     {
       id: 6,
-      title: "House shifting assistance",
-      description: "Need 2-3 people to help pack and move household items from old flat to new flat within Pune city. Distance is about 15km. Will provide packing materials and transportation. Need careful handling of electronics and glassware. Work involves packing, loading, unloading and basic arrangement.",
-      price: 750,
+      title: "Help with house shifting",
+      description: "Moving to a new 1BHK apartment within the same locality. Need 2-3 people to help pack, load, and unload furniture and boxes. Truck is already arranged. Items include bed, sofa, dining table, and about 20 boxes. New apartment is on ground floor.",
+      price: 600,
       category: "moving",
-      location: "Pune, Maharashtra",
-      poster: "Neha D.",
-      rating: 4.8,
-      timeEstimate: "5-6 hours",
-      urgency: "Today",
-      coordinates: { lat: 18.5204, lng: 73.8567 }
-    },
-    {
-      id: 7,
-      title: "Home cooking for dinner party",
-      description: "Need experienced cook to prepare North Indian dinner for 8 people at my home in Gurgaon. Menu includes dal makhani, paneer butter masala, rotis, rice, and dessert. All ingredients will be provided. Must have experience in party cooking and own transportation. Cooking to be done on-site.",
-      price: 900,
-      category: "cooking",
-      location: "Sector 49, Gurgaon",
-      poster: "Meera A.",
-      rating: 4.9,
-      timeEstimate: "4-5 hours",
-      urgency: "This Weekend",
-      coordinates: { lat: 28.4089, lng: 77.0424 }
-    },
-    {
-      id: 8,
-      title: "AC servicing and cleaning",
-      description: "Regular servicing and deep cleaning of 3 split ACs in my 3BHK apartment. Includes filter cleaning, coil cleaning, gas checking, and general maintenance. Must bring necessary tools and cleaning equipment. Previous AC servicing experience mandatory. All ACs are 1.5 ton capacity.",
-      price: 950,
-      category: "maintenance",
-      location: "Bandra East, Mumbai",
-      poster: "Karthik R.",
-      rating: 4.7,
-      timeEstimate: "3-4 hours",
-      urgency: "This Week",
-      coordinates: { lat: 19.0596, lng: 72.8411 }
-    },
-    {
-      id: 9,
-      title: "Plant care and gardening",
-      description: "Weekly plant care for my terrace garden with 20+ plants including watering, pruning, fertilizing, and pest control. Must have knowledge of plant care and gardening. Garden includes both flowering plants and vegetables. Regular weekly arrangement preferred for consistent care.",
-      price: 300,
-      category: "gardening",
-      location: "Jayanagar, Bangalore",
-      poster: "Lakshmi P.",
-      rating: 4.8,
-      timeEstimate: "2-3 hours",
-      urgency: "This Week",
-      coordinates: { lat: 12.9279, lng: 77.5937 }
-    },
-    {
-      id: 10,
-      title: "Tuition for Class 10 Math",
-      description: "Need experienced tutor for Class 10 CBSE Mathematics for my son. Prefer someone with B.Ed or engineering background. Sessions will be 3 times per week for 1.5 hours each. Must have good communication skills and patience with students. Home tuition preferred in Noida Sector 62.",
-      price: 500,
-      category: "tutoring",
       location: "Sector 62, Noida",
-      poster: "Amit S.",
-      rating: 4.9,
-      timeEstimate: "1.5 hours",
-      urgency: "This Week",
-      coordinates: { lat: 28.6273, lng: 77.3714 }
+      poster: "Rohit S.",
+      rating: 4.6,
+      timeEstimate: "4-5 hours",
+      urgency: "Tomorrow",
+      coordinates: { lat: 28.6139, lng: 77.3678 }
     }
   ];
 
