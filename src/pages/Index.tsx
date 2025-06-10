@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -69,6 +69,14 @@ const Index = () => {
     const matchesCategory = selectedCategory === 'all' || task.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
+
+  const categories = [
+    { id: 'all', name: 'All Tasks', count: filteredTasks.length },
+    { id: 'cleaning', name: 'Cleaning', count: filteredTasks.filter(t => t.category === 'cleaning').length },
+    { id: 'delivery', name: 'Delivery', count: filteredTasks.filter(t => t.category === 'delivery').length },
+    { id: 'handyman', name: 'Handyman', count: filteredTasks.filter(t => t.category === 'handyman').length },
+    { id: 'pet-care', name: 'Pet Care', count: filteredTasks.filter(t => t.category === 'pet-care').length },
+  ];
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
@@ -152,6 +160,7 @@ const Index = () => {
           <div className="lg:col-span-1">
             <div className="space-y-6">
               <CategoryFilter 
+                categories={categories}
                 selectedCategory={selectedCategory}
                 onCategoryChange={setSelectedCategory}
               />
