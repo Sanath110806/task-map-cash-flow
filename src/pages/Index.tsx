@@ -32,6 +32,7 @@ const Index = () => {
       poster_id: "user1",
       estimated_time: "4-5 hours",
       urgency: "Today",
+      created_at: "2024-01-15T10:00:00Z",
       profiles: {
         first_name: "Priya",
         last_name: "S.",
@@ -51,10 +52,91 @@ const Index = () => {
       poster_id: "user2",
       estimated_time: "2-3 hours",
       urgency: "Tomorrow",
+      created_at: "2024-01-15T09:30:00Z",
       profiles: {
         first_name: "Rajesh",
         last_name: "K.",
         rating: 4.9
+      }
+    },
+    {
+      id: '3',
+      title: "Walk my Golden Retriever",
+      description: "Looking for someone to walk my friendly Golden Retriever, Max, for 1 hour in the evening. He's well-trained and loves meeting new people. Must be comfortable with large dogs.",
+      price: 300,
+      category: "pet-care",
+      location: "Bandra East, Mumbai",
+      latitude: 19.0596,
+      longitude: 72.8295,
+      status: "open" as const,
+      poster_id: "user3",
+      estimated_time: "1 hour",
+      urgency: "Today",
+      created_at: "2024-01-15T08:45:00Z",
+      profiles: {
+        first_name: "Meera",
+        last_name: "D.",
+        rating: 4.7
+      }
+    },
+    {
+      id: '4',
+      title: "Fix leaking kitchen tap",
+      description: "My kitchen tap has been dripping for a week now. Need a skilled handyman to fix or replace the tap. Basic tools will be provided, but please bring expertise in plumbing.",
+      price: 450,
+      category: "handyman",
+      location: "Whitefield, Bangalore",
+      latitude: 12.9698,
+      longitude: 77.7500,
+      status: "open" as const,
+      poster_id: "user4",
+      estimated_time: "1-2 hours",
+      urgency: "This Weekend",
+      created_at: "2024-01-15T07:20:00Z",
+      profiles: {
+        first_name: "Amit",
+        last_name: "P.",
+        rating: 4.5
+      }
+    },
+    {
+      id: '5',
+      title: "Cook dinner for family gathering",
+      description: "Need an experienced cook to prepare traditional North Indian dinner for 8 people this Sunday. Menu includes dal, sabzi, roti, rice, and dessert. All ingredients will be provided.",
+      price: 1200,
+      category: "cooking",
+      location: "Punjabi Bagh, Delhi",
+      latitude: 28.6742,
+      longitude: 77.1311,
+      status: "open" as const,
+      poster_id: "user5",
+      estimated_time: "3-4 hours",
+      urgency: "This Weekend",
+      created_at: "2024-01-15T06:15:00Z",
+      profiles: {
+        first_name: "Sunita",
+        last_name: "M.",
+        rating: 4.9
+      }
+    },
+    {
+      id: '6',
+      title: "Help with house shifting",
+      description: "Moving to a new 1BHK apartment within the same locality. Need 2-3 people to help pack, load, and unload furniture and boxes. Truck is already arranged.",
+      price: 600,
+      category: "moving",
+      location: "Sector 62, Noida",
+      latitude: 28.6139,
+      longitude: 77.3678,
+      status: "open" as const,
+      poster_id: "user6",
+      estimated_time: "4-5 hours",
+      urgency: "Tomorrow",
+      created_at: "2024-01-15T05:30:00Z",
+      profiles: {
+        first_name: "Rohit",
+        last_name: "S.",
+        rating: 4.6
       }
     }
   ];
@@ -76,6 +158,8 @@ const Index = () => {
     { id: 'delivery', name: 'Delivery', count: filteredTasks.filter(t => t.category === 'delivery').length },
     { id: 'handyman', name: 'Handyman', count: filteredTasks.filter(t => t.category === 'handyman').length },
     { id: 'pet-care', name: 'Pet Care', count: filteredTasks.filter(t => t.category === 'pet-care').length },
+    { id: 'cooking', name: 'Cooking', count: filteredTasks.filter(t => t.category === 'cooking').length },
+    { id: 'moving', name: 'Moving', count: filteredTasks.filter(t => t.category === 'moving').length },
   ];
 
   return (
