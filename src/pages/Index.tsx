@@ -181,7 +181,7 @@ const Index = () => {
                   </div>
                   <div className="flex justify-between items-center">
                     <span className="text-gray-600">Response Time</span>
-                    <span className="font-medium">< 2 hours</span>
+                    <span className="font-medium">{"< 2 hours"}</span>
                   </div>
                 </CardContent>
               </Card>
