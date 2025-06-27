@@ -24,7 +24,7 @@ export type Database = {
           rating: number | null
           total_ratings: number | null
           updated_at: string | null
-          user_role: Database["public"]["Enums"]["user_role"]
+          user_role: Database["public"]["Enums"]["user_role"] | null
         }
         Insert: {
           address?: string | null
@@ -40,7 +40,7 @@ export type Database = {
           rating?: number | null
           total_ratings?: number | null
           updated_at?: string | null
-          user_role?: Database["public"]["Enums"]["user_role"]
+          user_role?: Database["public"]["Enums"]["user_role"] | null
         }
         Update: {
           address?: string | null
@@ -56,7 +56,7 @@ export type Database = {
           rating?: number | null
           total_ratings?: number | null
           updated_at?: string | null
-          user_role?: Database["public"]["Enums"]["user_role"]
+          user_role?: Database["public"]["Enums"]["user_role"] | null
         }
         Relationships: []
       }
